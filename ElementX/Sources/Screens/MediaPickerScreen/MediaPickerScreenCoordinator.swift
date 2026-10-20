@@ -44,15 +44,18 @@ enum MediaPickerScreenCoordinatorAction {
 
 class MediaPickerScreenCoordinator: CoordinatorProtocol {
     private let mode: MediaPickerScreenMode
+    private let appSettings: AppSettings
     private let userIndicatorController: UserIndicatorControllerProtocol
     private let orientationManager: OrientationManagerProtocol
     private let callback: (MediaPickerScreenCoordinatorAction) -> Void
     
     init(mode: MediaPickerScreenMode,
+         appSettings: AppSettings,
          userIndicatorController: UserIndicatorControllerProtocol,
          orientationManager: OrientationManagerProtocol,
          callback: @escaping (MediaPickerScreenCoordinatorAction) -> Void) {
         self.mode = mode
+        self.appSettings = appSettings
         self.userIndicatorController = userIndicatorController
         self.orientationManager = orientationManager
         self.callback = callback
@@ -112,7 +115,7 @@ class MediaPickerScreenCoordinator: CoordinatorProtocol {
     }
     
     private var cameraPicker: some View {
-        CameraPicker(userIndicatorController: userIndicatorController) { [weak self] action in
+        CameraPicker(appSettings: appSettings, userIndicatorController: userIndicatorController) { [weak self] action in
             switch action {
             case .cancel:
                 self?.callback(.cancel)

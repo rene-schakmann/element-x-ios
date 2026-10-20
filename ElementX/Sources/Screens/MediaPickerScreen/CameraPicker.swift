@@ -21,11 +21,14 @@ enum CameraPickerError: Error {
 }
 
 struct CameraPicker: UIViewControllerRepresentable {
+    private let appSettings: AppSettings
     private let userIndicatorController: UserIndicatorControllerProtocol
     private let callback: (CameraPickerAction) -> Void
     
-    init(userIndicatorController: UserIndicatorControllerProtocol,
+    init(appSettings: AppSettings,
+         userIndicatorController: UserIndicatorControllerProtocol,
          callback: @escaping (CameraPickerAction) -> Void) {
+        self.appSettings = appSettings
         self.userIndicatorController = userIndicatorController
         self.callback = callback
     }
@@ -41,10 +44,21 @@ struct CameraPicker: UIViewControllerRepresentable {
             imagePicker.mediaTypes = mediaTypes
         }
         
+        if let rawValue = appSettings.cameraFlashMode,
+           let flashMode = UIImagePickerController.CameraFlashMode(rawValue: rawValue),
+           UIImagePickerController.isFlashAvailable(for: imagePicker.cameraDevice) {
+            imagePicker.cameraFlashMode = flashMode
+        }
+        
         return imagePicker
     }
     
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) { }
+    
+    // Called however the picker goes away (capture or cancel), and cameraFlashMode tracks the picker's flash control.
+    static func dismantleUIViewController(_ uiViewController: UIImagePickerController, coordinator: Coordinator) {
+        coordinator.saveFlashMode(of: uiViewController)
+    }
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -58,6 +72,11 @@ struct CameraPicker: UIViewControllerRepresentable {
         }
         
         private static let loadingIndicatorIdentifier = "\(CameraPicker.self)-Loading"
+        
+        func saveFlashMode(of picker: UIImagePickerController) {
+            guard UIImagePickerController.isFlashAvailable(for: picker.cameraDevice) else { return }
+            cameraPicker.appSettings.cameraFlashMode = picker.cameraFlashMode.rawValue
+        }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             picker.delegate = nil

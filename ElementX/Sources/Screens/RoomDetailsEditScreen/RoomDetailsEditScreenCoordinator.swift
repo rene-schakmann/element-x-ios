@@ -68,6 +68,7 @@ final class RoomDetailsEditScreenCoordinator: CoordinatorProtocol {
         let stackCoordinator = NavigationStackCoordinator()
         
         let mediaPickerCoordinator = MediaPickerScreenCoordinator(mode: mode,
+                                                                  appSettings: parameters.userSession.userSettings.app,
                                                                   userIndicatorController: parameters.userIndicatorController,
                                                                   orientationManager: parameters.orientationManager) { [weak self] action in
             guard let self else { return }

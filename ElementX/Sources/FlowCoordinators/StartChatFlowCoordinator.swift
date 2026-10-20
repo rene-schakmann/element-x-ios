@@ -245,6 +245,7 @@ class StartChatFlowCoordinator: FlowCoordinatorProtocol {
         let stackCoordinator = NavigationStackCoordinator()
         
         let mediaPickerCoordinator = MediaPickerScreenCoordinator(mode: mode,
+                                                                  appSettings: flowParameters.userSession.userSettings.app,
                                                                   userIndicatorController: flowParameters.userIndicatorController,
                                                                   orientationManager: flowParameters.windowManager) { [weak self] action in
             guard let self else { return }

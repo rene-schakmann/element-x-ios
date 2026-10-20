@@ -1076,6 +1076,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         let stackCoordinator = NavigationStackCoordinator()
         
         let mediaPickerCoordinator = MediaPickerScreenCoordinator(mode: mode,
+                                                                  appSettings: userSession.userSettings.app,
                                                                   userIndicatorController: flowParameters.userIndicatorController,
                                                                   orientationManager: flowParameters.appMediator.windowManager) { [weak self] action in
             guard let self else {

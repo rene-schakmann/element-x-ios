@@ -321,6 +321,10 @@ final nonisolated class AppSettings: @unchecked Sendable {
     @UserPreference(defaultValue: true)
     var optimizeMediaUploads: Bool
     
+    /// The last flash mode chosen in the camera picker, stored as a `UIImagePickerController.CameraFlashMode` raw value.
+    @UserPreference
+    var cameraFlashMode: Int?
+    
     @UserPreference(defaultValue: AudioPlaybackSpeed.default)
     var voiceMessagePlaybackSpeed: AudioPlaybackSpeed
     
